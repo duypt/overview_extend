@@ -9,14 +9,16 @@ class OverviewHookListener < Redmine::Hook::ViewListener
   #end
   def view_projects_show_left(context={} )
   	# get all issues with project_id condition
-	issues = Issue.find(:all, :conditions => {:project_id => context[:project].id})
+  	# risk tracker_id = 13
+	issues = Issue.find(:all, :conditions => {:project_id => context[:project].id,:tracker_id => 1})
+	#issues = Issue.find(:all, :conditions => {:tracker_id => 1})
     # title tag
     my_title_html = content_tag("h3","Top 5 risk issues")
 	# table header
 	id_header_tag = content_tag("a","#",:class => "sort desc", :href => "/redmine/projects/#{context[:project].id}?sort=id")
 	tracker_header_tag = content_tag("a","Tracker", :href => "/redmine/projects/#{context[:project].id}?sort=tracker%2Cid")
 
-	table_header_title_list = content_tag("th",id_header_tag) + content_tag("th",tracker_header_tag) + content_tag("th","Status") + content_tag("th","Subject") + content_tag("th","Assigned to") + content_tag("th","Updated") + content_tag("th","Target version") + content_tag("th","Due date") + content_tag("th","% Done")
+	table_header_title_list = content_tag("th",id_header_tag) + content_tag("th",tracker_header_tag) + content_tag("th","Status") + content_tag("th","Subject") + content_tag("th","Assigned to") + content_tag("th","Updated") + content_tag("th","Target version")+ content_tag("th","Start date") + content_tag("th","Due date") + content_tag("th","% Done")
 	table_header_title_list_box = content_tag("tr",table_header_title_list)
 	table_header = content_tag("thead",table_header_title_list_box)
 
@@ -27,7 +29,7 @@ class OverviewHookListener < Redmine::Hook::ViewListener
 		subject_record_tag = content_tag("a",iss.subject, :href => "/redmine/issues/#{iss.id}")
 		user_record_tag = content_tag("a",iss.assigned_to, :href => "/redmine/users/#{User.current.id}")
 
-		table_record = content_tag("td",id_record_tag, :class => "id") + content_tag("td",iss.tracker, :class => "tracker") + content_tag("td",iss.status, :class => "status") + content_tag("td",subject_record_tag, :class => "subject") + content_tag("td",user_record_tag, :class => "assigned_to") + content_tag("td",iss.updated_on, :class => "updated_on") + content_tag("td",iss.fixed_version, :class => "fixed_version") + content_tag("td",iss.due_date, :class => "due_date") + content_tag("td",iss.done_ratio, :class => "done_ratio")
+		table_record = content_tag("td",id_record_tag, :class => "id") + content_tag("td",iss.tracker, :class => "tracker") + content_tag("td",iss.status, :class => "status") + content_tag("td",subject_record_tag, :class => "subject") + content_tag("td",user_record_tag, :class => "assigned_to") + content_tag("td",iss.updated_on, :class => "updated_on") + content_tag("td",iss.fixed_version, :class => "fixed_version") + content_tag("td",format_date(iss.start_date), :class => "start_date") + content_tag("td",format_date(iss.due_date), :class => "due_date") + content_tag("td",progress_bar(iss.done_ratio), :class => "done_ratio")
 		
 		if table_record_box == nil
 			table_record_box = content_tag("tr",table_record,:class => "hascontextmenu",:id => "issue-#{iss.id}")

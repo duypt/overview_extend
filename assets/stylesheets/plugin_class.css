@@ -1,0 +1,16 @@
+.box_2{
+padding:6px;
+margin-bottom: 10px;
+background-color:#f6f6f6;
+color:#505050;
+line-height:1.5em;
+border: 1px solid #e4e4e4;
+width: 745px;
+text-align: center;
+}
+.box_2 h3{
+  text-align: left;
+}
+.box_2 td.subject{
+  text-align: left;
+}
